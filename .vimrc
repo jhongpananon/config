@@ -44,11 +44,20 @@ Plugin 'airblade/vim-gitgutter'                     " Show git changes in vim on
 Plugin 'dhruvasagar/vim-table-mode'                 " markdown file editor to automatically insert |
 Plugin 'xolox/vim-lua-ftplugin'                     " Lua plugin for vim
 Plugin 'dracula/vim'                                " Dracula colorscheme
+Plugin 'Rip-Rip/clang_complete'                     " Clang autocomplet for C-code
 "Plugin 'octref/RootIgnore'  " Ctrl-P ignore files in .gitignore
 "Plugin 'thoughtbot/vim-rspec' "Rspec for VIM, https://robots.thoughtbot.com/running-specs-from-vim
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
+" }}}
+
+" Clang Complete {{{
+let g:clang_user_options='|| exit 0'
+let g:clang_complete_auto = 1
+let g:clang_complete_copen = 1
+let g:clang_use_library = 1
+let g:clang_library_path='/home/jhongpananon/llvm/build/lib/libclang.so'
 " }}}
 
 " C settings {{{
