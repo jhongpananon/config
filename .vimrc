@@ -45,6 +45,7 @@ Plugin 'dhruvasagar/vim-table-mode'                 " markdown file editor to au
 Plugin 'xolox/vim-lua-ftplugin'                     " Lua plugin for vim
 Plugin 'dracula/vim'                                " Dracula colorscheme
 Plugin 'Rip-Rip/clang_complete'                     " Clang autocomplet for C-code
+Plugin 'justinmk/vim-syntax-extra'
 "Plugin 'octref/RootIgnore'  " Ctrl-P ignore files in .gitignore
 "Plugin 'thoughtbot/vim-rspec' "Rspec for VIM, https://robots.thoughtbot.com/running-specs-from-vim
 " All of your Plugins must be added before the following line
@@ -98,8 +99,8 @@ set timeoutlen=2000 "timeout length for leader key
 nnoremap ; : 
 
 " cycle through buffers with TAB or SHIFT-TAB
-nnoremap <Tab> :bnext<CR>
-nnoremap <S-Tab> :bprevious<CR>
+nnoremap <S-Tab> :bnext<CR>
+nnoremap <Tab> :bprevious<CR>
 " open buffer explorer
 nnoremap <leader>g :ls<CR>:b<Space>
 
@@ -132,6 +133,9 @@ let g:ctrlp_extensions = ['smarttabs']
 " " (Default: 1)
 let g:ctrlp_smarttabs_modify_tabline = 0
 
+" custom ignore for ctrlp
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hooks|jenkins|jenkins2|libs|os|peripherals|site_scons|tegra-os|tools|can-requirements|generated-dbc|generated-headers|REDIST_OK)$'
+
 " Open Ctrl-P find in a new tab
 map <leader>t :CtrlPSmartTabs<CR>
 " }}}
@@ -143,7 +147,7 @@ if executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --path-to-ignore ~/.agignore --nocolor --hidden -g ""'
 
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
@@ -163,7 +167,8 @@ nmap <leader>A :tab split<CR>:Ag <C-r><C-w><CR>
 " }}}
 
 " Many configs {{{
-set gdefault                          " assume the /g flag on :s substitutions to replace all matches in a line
+match Ignore /\r$/
+map <leader>h :e ++ff=dos<CR>
 set autoindent                        " auto indenting
 set number                            " line numbers
 set relativenumber                    " shows relative line numbers
@@ -185,7 +190,7 @@ if exists("&undodir")
 endif
 set history=700                       " Sets how many lines of history VIM has to remember
 set autoread                          " Set to auto read when a file is changed from the outside
-set so=40                             " Set 10 lines to the cursor - when moving vertically using j/k
+set so=15                             " Set 10 lines to the cursor - when moving vertically using j/k
 set splitright                        " New splits always to right or below active window
 set splitbelow
 set wildmenu                          " Turn on the WiLd menu
@@ -254,7 +259,20 @@ colorscheme material-monokai
 
 hi clear CursorLineNR "clears highlighting of cursor line number
 set encoding=utf8 " Set utf8 as standard encoding and en_US as the standard language
-set ffs=unix,dos,mac " Use Unix as the standard file type
+set ffs=dos " Use Unix as the standard file type
+
+for i in ['cterm', 'gui']
+  for j in ['fg', 'bg']
+    let c = synIDattr(hlID('Normal'), 'bg', i)
+    if (!empty(c))
+      exec 'highlight CarriageReturn ' . i . j . '=' . c
+    endif
+  endfor
+endfor
+if hlID('CarriageReturn')
+  match CarriageReturn /\r$/
+endif
+
 " }}}
 
 " Buffer {{{
