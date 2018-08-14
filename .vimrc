@@ -46,6 +46,11 @@ Plugin 'xolox/vim-lua-ftplugin'                     " Lua plugin for vim
 Plugin 'dracula/vim'                                " Dracula colorscheme
 Plugin 'Rip-Rip/clang_complete'                     " Clang autocomplet for C-code
 Plugin 'justinmk/vim-syntax-extra'
+Plugin 'Shougo/deoplete.nvim'
+"jlugin 'zchee/deoplete-clang'
+"Plugin 'lyuts/vim-rtags'
+"Plugin 'oblitum/YouCompleteMe'
+Plugin 'Shougo/neocomplete.vim'
 "Plugin 'octref/RootIgnore'  " Ctrl-P ignore files in .gitignore
 "Plugin 'thoughtbot/vim-rspec' "Rspec for VIM, https://robots.thoughtbot.com/running-specs-from-vim
 " All of your Plugins must be added before the following line
@@ -53,12 +58,22 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 " }}}
 
+filetype plugin on
+set omnifunc=syntaxcomplete#Complet
+
+" vim rtags {{{
+"let g:rtagsUseDefaultMappings = 0
+"let g:rtagsJumpStackMaxSize = 100
+"let g:rtagsUseLocationList = 0
+" }}}
+
 " Clang Complete {{{
 let g:clang_user_options='|| exit 0'
 let g:clang_complete_auto = 1
 let g:clang_complete_copen = 1
 let g:clang_use_library = 1
-let g:clang_library_path='/home/jhongpananon/llvm/build/lib/libclang.so'
+" Disabled until libclang.so can be compiled manually again
+let g:clang_library_path='/home/jhongpananon/llvm-project/build/lib/libclang.so.9'
 " }}}
 
 " C settings {{{
@@ -99,8 +114,11 @@ set timeoutlen=2000 "timeout length for leader key
 nnoremap ; : 
 
 " cycle through buffers with TAB or SHIFT-TAB
-nnoremap <S-Tab> :bnext<CR>
-nnoremap <Tab> :bprevious<CR>
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprevious<CR>
+" cycle through tabs
+map <C-j> :tabprevious<CR>
+map <C-k> :tabnext<CR>
 " open buffer explorer
 nnoremap <leader>g :ls<CR>:b<Space>
 
@@ -157,6 +175,8 @@ if executable('ag')
   let g:ctrlp_match_window = 'bottom,order:ttb'
 
   let g:ctrlp_working_path_mode = 0
+
+  let g:ctrlp_regexp = 1
 endif
 
 "Open new tab and search for something
@@ -167,7 +187,7 @@ nmap <leader>A :tab split<CR>:Ag <C-r><C-w><CR>
 " }}}
 
 " Many configs {{{
-match Ignore /\r$/
+"match Ignore /\r$/
 map <leader>h :e ++ff=dos<CR>
 set autoindent                        " auto indenting
 set number                            " line numbers
@@ -222,7 +242,8 @@ set preserveindent
 set softtabstop=0
 set smarttab                          " Be smart when using tabs ;)
 set shiftwidth=4                      " 1 tab == 4 spaces
-set tabstop=2
+set tabstop=4
+set cursorline
 
 set ai                                " Auto indent
 set si                                " Smart indent
@@ -251,7 +272,7 @@ nmap <Leader>. :w<cr>
 " }}}
 
 " Colors/Fonts {{{
-syntax enable
+"syntax enable
 set background=dark
 set t_Co=256
 "colorscheme dracula
